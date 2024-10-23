@@ -1,25 +1,27 @@
 <form #JobApplicationForm="ngForm">
   <div class="form-group">
     <label for="country">Country</label>
-    <select id="country" class="form-control" required [(ngModel)]="application.country" name="country">
-      <option>Canada</option>
-      <option>U.S</option>
+    <select id="country" class="form-control" required [(ngModel)]="application.country" name="country" #country="ngModel">
+      <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
     </select>
   </div>
 
   <div>
     <label for="state">State/Province</label>
-    <select id="state" class="form-control" required [(ngModel)]="application.state" name ="state" #state ="ngModel">
+    <select id="state" class="form-control" required [(ngModel)]="application.state" name="state" #state="ngModel">
       <option *ngFor="let state of states" [value]="state">{{ state }}</option>
     </select>
 
   </div>
-
+  <div>
+    <label for="coverLetter">Cover Letter</label>
+    <input type="text" id="coverLetter" class="form-control" rows="5" cols="50" required [(ngModel)]="application.coverLetter" name="coverLetter">
+  </div>
   <div>
     <label for="resume">Resume</label>
     <input type="text" id="resume" class="form-control" rows="5" cols="50" required [(ngModel)]="application.resume" name="resume">
-
   </div>
+
   <button type="submit" class="btn btn-success">Submit</button>
 </form>
 
