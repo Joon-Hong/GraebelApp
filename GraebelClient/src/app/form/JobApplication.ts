@@ -1,6 +1,7 @@
 export class JobApplication {
   constructor(
-    public name: string,
+    public firstName:string,
+    public lastName: string,
     public coverLetter: string,
     public resume: string,
     public state: string,
