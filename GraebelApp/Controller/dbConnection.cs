@@ -36,7 +36,6 @@ namespace GraebelApp.Controller
             command.Parameters.Add("@country", SqlDbType.NVarChar);
             command.Parameters.Add("@date");
 
-
             command.Parameters["@firstName"].Value = application.firstName;
             command.Parameters["@lastName"].Value = application.lastName;
             command.Parameters["@coverLetter"].Value = application.coverLetter;
@@ -44,7 +43,6 @@ namespace GraebelApp.Controller
             command.Parameters["@state"].Value = application.state;
             command.Parameters["@country"].Value = application.country;
             command.Parameters["@date"].Value = "GETDATE()";
-
             try
             {
                 Console.WriteLine("Inserting Job application");
@@ -54,16 +52,15 @@ namespace GraebelApp.Controller
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-
             }
         }
 
         public JobApplication GetJobApplication(int id)
         {
+            // select jobapp with id
             var command = new SqlCommand("SELECT * FROM Graebel.dbo.JobApplication WHERE id=@id", conn);
             command.Parameters.Add("@id", SqlDbType.Int);
             command.Parameters["@id"].Value = id;
-
             try
             {
                 Console.WriteLine("Getting Job application with id:{0}", id);
@@ -76,15 +73,13 @@ namespace GraebelApp.Controller
                 string country = results.GetString(6);
                 string date = results.GetString(7);
 
-                JobApplication jobApp = new JobApplication();
-
+                JobApplication jobApp = new JobApplication(firstName, lastName, coverLetter, resume, state, country, date);
+                return jobApp;
             }
             catch (Exception ex) {
                 Console.WriteLine(ex.Message);
                 throw;
-
             }
-
         }
     }
 }

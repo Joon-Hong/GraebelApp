@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using GraebelApp.Model;
 using GraebelApp.Controller;
+using System.Net;
+using System.Net.Http;
 
 namespace MyApi.Controllers
 {
@@ -11,16 +13,22 @@ namespace MyApi.Controllers
         private readonly dbConnection db;
 
         [HttpGet]
-        public async Task<HttpResponseMessage> GetJobApplication(int id)
+        public HttpResponseMessage GetJobApplication(int id)
         {
             try
             {
-                return Ok(await db.());
+                db.connectDB();
+                JobApplication application = db.GetJobApplication(id);
+                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = new StringContent(application.ToString());
+                db.CloseDB();
+                return response;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error retrieving data from the database");
+                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                response.Content = new StringContent(ex.Message);
+                return response;
             }
         }
 
@@ -31,17 +39,20 @@ namespace MyApi.Controllers
             {
                 if (application == null)
                 {
-                    return BadRequest();
+                    return new HttpResponseMessage(HttpStatusCode.BadRequest);
                 }
+                db.connectDB();
                 db.AddJobApplication(application);
-                return CreatedAtAction(nameof(GetJobApplication));
+                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                db.CloseDB();
+                return response;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error creating new Job Application");
+                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                response.Content = new StringContent(ex.Message);
+                return response;
             }
-
         }
-
     }
 }
