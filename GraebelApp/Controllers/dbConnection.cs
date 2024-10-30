@@ -8,15 +8,13 @@ namespace GraebelApp.Controller
 {
     public class dbConnection
     {
-        private static string connectionString = "a";
+        private static string connectionString = "Data Source=localhost;Integrated Security=True;TrustServerCertificate=true;Initial Catalog=Graebel;";
         private static SqlConnection? conn;
 
-        public SqlConnection connectDB()
+        public void connectDB()
         {
-            SqlConnection conn = new SqlConnection(connectionString);
+            conn = new SqlConnection(connectionString);
             conn.Open();
-
-            return conn;
         }
         public void CloseDB()
         {
@@ -65,6 +63,8 @@ namespace GraebelApp.Controller
             {
                 Console.WriteLine("Getting Job application with id:{0}", id);
                 SqlDataReader results = command.ExecuteReader();
+                results.Read();
+
                 string firstName = results.GetString(1);
                 string lastName = results.GetString(2);
                 string coverLetter = results.GetString(3);

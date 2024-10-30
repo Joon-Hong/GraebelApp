@@ -2,21 +2,21 @@
 using GraebelApp.Model;
 using GraebelApp.Controller;
 using System.Net;
-using System.Net.Http;
 
 namespace MyApi.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class ProductsController : ControllerBase
+    public class JobApplicationController : ControllerBase
     {
-        private readonly dbConnection db;
+        private dbConnection db;
 
+        [Route("GetJobApplication/{id:int}")]
         [HttpGet]
         public HttpResponseMessage GetJobApplication(int id)
         {
             try
             {
+                db = new dbConnection();
                 db.connectDB();
                 JobApplication application = db.GetJobApplication(id);
                 HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
@@ -31,7 +31,7 @@ namespace MyApi.Controllers
                 return response;
             }
         }
-
+        [Route("CreateJobApplication")]
         [HttpPost]
         public HttpResponseMessage CreateJobApplication([FromBody]JobApplication application)
         {
@@ -41,6 +41,7 @@ namespace MyApi.Controllers
                 {
                     return new HttpResponseMessage(HttpStatusCode.BadRequest);
                 }
+                db = new dbConnection();
                 db.connectDB();
                 db.AddJobApplication(application);
                 HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
