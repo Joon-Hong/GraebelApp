@@ -2,7 +2,6 @@
 using GraebelApp.Model;
 using GraebelApp.Controller;
 using System.Net;
-
 namespace MyApi.Controllers
 {
     [ApiController]
@@ -12,35 +11,38 @@ namespace MyApi.Controllers
 
         [Route("GetJobApplication/{id:int}")]
         [HttpGet]
-        public HttpResponseMessage GetJobApplication(int id)
+        public ActionResult<JobApplication> GetJobApplication(int id)
         {
             try
             {
                 db = new dbConnection();
                 db.connectDB();
                 JobApplication application = db.GetJobApplication(id);
-                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-                response.Content = new StringContent(application.ToString());
+
                 db.CloseDB();
-                return response;
+                return application;
             }
             catch (Exception ex)
             {
-                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                response.Content = new StringContent(ex.Message);
-                return response;
+                Console.WriteLine(ex);
+                
+                return NotFound();
             }
+                
+
         }
         [Route("CreateJobApplication")]
         [HttpPost]
-        public HttpResponseMessage CreateJobApplication([FromBody]JobApplication application)
+        public ActionResult<HttpResponseMessage> CreateJobApplication([FromBody]JobApplication application)
         {
             try
             {
+                // reject bad request
                 if (application == null)
                 {
                     return new HttpResponseMessage(HttpStatusCode.BadRequest);
                 }
+                // add job app
                 db = new dbConnection();
                 db.connectDB();
                 db.AddJobApplication(application);
@@ -50,6 +52,7 @@ namespace MyApi.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 response.Content = new StringContent(ex.Message);
                 return response;

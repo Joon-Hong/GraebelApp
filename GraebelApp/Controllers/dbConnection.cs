@@ -1,8 +1,6 @@
 ﻿using GraebelApp.Model;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using static System.Net.Mime.MediaTypeNames;
-
 namespace GraebelApp.Controller
 
 {
@@ -24,7 +22,8 @@ namespace GraebelApp.Controller
         public void AddJobApplication(JobApplication application)
         {
             // create insert query
-            var command = new SqlCommand("INSERT INTO Graebel.dbo.JobApplication VALUES (@firstName, @lastName, @coverLetter, @resume, @state, @country, @date)", conn);
+            var command = new SqlCommand("INSERT INTO Graebel.dbo.JobApplication (firstname, lastname, coverLetter, resume, state, country)" +
+                " VALUES (@firstName, @lastName, @coverLetter, @resume, @state, @country)", conn);
             
             command.Parameters.Add("@firstName", SqlDbType.NVarChar);
             command.Parameters.Add("@lastName", SqlDbType.NVarChar);
@@ -32,7 +31,6 @@ namespace GraebelApp.Controller
             command.Parameters.Add("@resume", SqlDbType.NVarChar);
             command.Parameters.Add("@state", SqlDbType.NVarChar);
             command.Parameters.Add("@country", SqlDbType.NVarChar);
-            command.Parameters.Add("@date");
 
             command.Parameters["@firstName"].Value = application.firstName;
             command.Parameters["@lastName"].Value = application.lastName;
@@ -40,7 +38,6 @@ namespace GraebelApp.Controller
             command.Parameters["@resume"].Value = application.resume;
             command.Parameters["@state"].Value = application.state;
             command.Parameters["@country"].Value = application.country;
-            command.Parameters["@date"].Value = "GETDATE()";
             try
             {
                 Console.WriteLine("Inserting Job application");
@@ -50,6 +47,7 @@ namespace GraebelApp.Controller
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                throw;
             }
         }
 
@@ -71,9 +69,9 @@ namespace GraebelApp.Controller
                 string resume = results.GetString(4);
                 string state = results.GetString(5);
                 string country = results.GetString(6);
-                string date = results.GetString(7);
+                DateTime date = results.GetDateTime(7);
 
-                JobApplication jobApp = new JobApplication(firstName, lastName, coverLetter, resume, state, country, date);
+                JobApplication jobApp = new JobApplication(firstName, lastName, coverLetter, resume, state, country, date.ToString());
                 return jobApp;
             }
             catch (Exception ex) {

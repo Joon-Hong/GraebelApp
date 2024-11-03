@@ -2,8 +2,14 @@
 {
     public class JobApplication
     {
-        public JobApplication(string firstName, string lastName, string coverLetter, string resume, string state, string country, string date = null) { 
-
+        public JobApplication(string firstName, string lastName, string coverLetter, string resume, string state, string country, string date = null) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.coverLetter = coverLetter;
+            this.resume = resume;
+            this.state = state;
+            this.country = country;
+            this.date = date;
         } 
         public int id { get; set; }
         public string? firstName { get; set; }

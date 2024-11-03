@@ -6,7 +6,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var app = builder.Build();
 app.UseRouting();
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
